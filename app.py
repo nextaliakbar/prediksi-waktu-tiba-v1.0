@@ -10,6 +10,7 @@ model = joblib.load('model_xgb.pkl')
 
 @app.route('/predict', methods=['POST'])
 def predict():
+    
     if model is None:
         return jsonify({'error' : 'Model not loaded'}, 500)
     
@@ -21,7 +22,14 @@ def predict():
     try:
         input_data = pd.DataFrame([data])
 
-        prediction = model.predict(input_data)[0]
+        try:
+            prediction = model.predict(input_data)[0]
+        except Exception as pred_error:
+            if hasattr(model, 'get_booster'):
+                model.set_param({'gpu_id' : -1})
+                prediction = model.predict(input_data)[0]
+            else:
+                raise pred_error
 
         return jsonify({'predict' : round(float(prediction), 2)})
     
