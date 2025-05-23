@@ -10,7 +10,13 @@ model = joblib.load('model_xgb.pkl')
 
 @app.route('/predict', methods=['POST'])
 def predict():
+    if model is None:
+        return jsonify({'error' : 'Model not loaded'}, 500)
+    
     data = request.get_json()
+
+    if not data:
+        return jsonify({'error' : 'No input data provided'}, 400)
 
     try:
         input_data = pd.DataFrame([data])
