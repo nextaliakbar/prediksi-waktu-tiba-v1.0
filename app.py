@@ -4,8 +4,10 @@ import numpy as np
 import pandas as pd
 import os
 import xgboost as xgb
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app, resources={r"/*": {"origins": "https://queenfruits.mitrajamur.com"}})
 
 # Load model dengan fix untuk gpu_id issue
 def load_model_safe():
