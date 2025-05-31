@@ -54,6 +54,25 @@ def predict():
         return jsonify({'error': 'No input data provided'}), 400
 
     try:
+        if 'Delivery_person_Age' in data and isinstance(data['Delivery_person_Age'], str):
+            try:
+                data['Delivery_person_Age'] = int(data['Delivery_person_Age'])
+            except ValueError:
+                return jsonify({'error': 'Invalid value for Delivery_person_Age. Must be a number.'}), 400
+        
+        if 'Delivery_person_Ratings' in data and isinstance(data['Delivery_person_Ratings'], str):
+            try:
+                data['Delivery_person_Ratings'] = float(data['Delivery_person_Ratings'])
+            except ValueError:
+                return jsonify({'error': 'Invalid value for Delivery_person_Ratings. Must be a number.'}), 400
+        
+        if 'distance' in data and isinstance(data['distance'], str):
+            try:
+                data['distance'] = float(data['distance'])
+            except ValueError:
+                return jsonify({'error': 'Invalid value for distance. Must be a number.'}), 400
+
+
         input_data = pd.DataFrame([data])
         
         # Prediction dengan handling berbagai tipe model
